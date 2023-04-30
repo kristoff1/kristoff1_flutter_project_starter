@@ -1,8 +1,6 @@
-import 'package:dio/dio.dart';
-
 abstract class ExampleApi {
 
-  Future<Response> getList(int page);
-  Future<Response> getDetail(String id);
+  Future<List<Map<String, dynamic>>> getList(int page);
+  Future<Map<String, dynamic>> getDetail(String id);
 
 }

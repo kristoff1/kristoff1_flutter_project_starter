@@ -11,14 +11,14 @@ class ExampleApiImplementation extends ExampleApi {
   });
 
   @override
-  Future<Response> getDetail(String id) async {
+  Future<Map<String, dynamic>> getDetail(String id) async {
     try {
       ///TODO SET THE PATH AND QUERY YOURSELF THIS IS JUST AN EXAMPLE
       Response response = await interface.get(
         path: '/example/path',
         queryParams: {'key': id},
       );
-      return response;
+      return _convertResponseToJSON(response);
     } on DioError catch (e) {
       if (e.response?.statusCode == 503) {
         throw UnderMaintenanceException('Under Maintenance');
@@ -32,13 +32,14 @@ class ExampleApiImplementation extends ExampleApi {
   }
 
   @override
-  Future<Response> getList(int page) async {
+  Future<List<Map<String, dynamic>>> getList(int page) async {
+    ///TODO SET THE PATH AND QUERY YOURSELF THIS IS JUST AN EXAMPLE
     try {
       Response response = await interface.get(
-        path: '/api/nl/collection',
-        queryParams: {'p': page},
+        path: '/put/the/path/here',
+        queryParams: {'example-query': page},
       );
-      return response;
+      return _convertListResponseToJSON(response);
     } on DioError catch(e) {
       if (e.response?.statusCode == 503) {
         throw UnderMaintenanceException('Under Maintenance');
@@ -49,6 +50,25 @@ class ExampleApiImplementation extends ExampleApi {
     catch (e) {
       ///TODO ADD YOUR OWN EXCEPTION
       throw Exception('Unknown Exception');
+    }
+  }
+
+  Map<String, dynamic> _convertResponseToJSON(Response response) {
+    try {
+      return Map<String, dynamic>.from(response.data);
+    } catch (e) {
+      throw Exception('Network Exception');
+    }
+  }
+
+  List<Map<String, dynamic>> _convertListResponseToJSON(Response response) {
+    try {
+      return List<Map<String, dynamic>>.from(response.data)
+          .map((json) => Map<String, dynamic>.from(json))
+          .toList();
+    } catch (e) {
+      ///TODO HANDLE ERROR HERE
+      throw Exception();
     }
   }
 }
